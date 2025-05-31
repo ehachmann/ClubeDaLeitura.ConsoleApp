@@ -29,15 +29,16 @@ namespace ClubeDaLeitura.ConsoleApp.Compartilhado
 
         public TelaBase ObterTela()
         {
-           /* if (opcaoEscolhida == '1')
+            /*if (opcaoEscolhida == '1')
                 return telaEquipamento;
 
             else if (opcaoEscolhida == '2')
                 return telaChamado;
 
             else if (opcaoEscolhida == '3')
-                return telaFabricante;*/
+                return telaFabricante;
 
+            return null;*/
             return null;
         }
     }
