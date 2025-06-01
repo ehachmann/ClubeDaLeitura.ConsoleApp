@@ -1,4 +1,5 @@
 ﻿using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
+using ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 namespace ClubeDaLeitura.ConsoleApp.Compartilhado
 {
@@ -7,14 +8,19 @@ namespace ClubeDaLeitura.ConsoleApp.Compartilhado
         private char opcaoEscolhida;
 
         private RepositorioAmigo repositorioAmigo;
+        private RepositorioCaixa repositorioCaixa;
 
         private TelaAmigo telaAmigo;
+        private TelaCaixa telaCaixa;
+
 
         public TelaPrincipal()
         {
             repositorioAmigo = new RepositorioAmigo();
+            repositorioCaixa = new RepositorioCaixa();
 
             telaAmigo = new TelaAmigo(repositorioAmigo);
+            telaCaixa = new TelaCaixa(repositorioCaixa);
 
         }
 
@@ -45,10 +51,10 @@ namespace ClubeDaLeitura.ConsoleApp.Compartilhado
             if (opcaoEscolhida == '1')
                 return telaAmigo;
 
-            /*else if (opcaoEscolhida == '2')
-                return telaChamado;
+            else if (opcaoEscolhida == '2')
+                return telaCaixa;
 
-            else if (opcaoEscolhida == '3')
+            /*else if (opcaoEscolhida == '3')
                 return telaFabricante;*/
 
             return null;

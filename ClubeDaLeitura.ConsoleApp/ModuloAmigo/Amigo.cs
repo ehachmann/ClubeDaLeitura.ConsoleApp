@@ -40,11 +40,11 @@ namespace ClubeDaLeitura.ConsoleApp.ModuloAmigo
 
         public override void AtualizarRegistro(EntidadeBase registroAtualizado)
         {
-            Amigo fabricanteAtualizado = (Amigo)registroAtualizado;
+            Amigo amigoAtualizado = (Amigo)registroAtualizado;
 
-            this.nome = fabricanteAtualizado.nome;
-            this.responsavel = fabricanteAtualizado.responsavel;
-            this.telefone = fabricanteAtualizado.telefone;
+            this.nome = amigoAtualizado.nome;
+            this.responsavel = amigoAtualizado.responsavel;
+            this.telefone = amigoAtualizado.telefone;
         }
     }
 }
