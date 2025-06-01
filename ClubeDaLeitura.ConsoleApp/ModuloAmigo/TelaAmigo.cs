@@ -1,10 +1,12 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloAmigo;
 
 public class TelaAmigo : TelaBase
 {
     private RepositorioAmigo repositorioAmigo;
+    private RepositorioRevista repositorioRevista;
 
     public TelaAmigo(RepositorioAmigo repositorioAmigo)
         : base("Amigo", repositorioAmigo)

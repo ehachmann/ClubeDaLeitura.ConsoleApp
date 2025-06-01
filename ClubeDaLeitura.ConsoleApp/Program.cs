@@ -1,46 +1,49 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
+using ClubeDaLeitura.ConsoleApp.ModuloCaixa;
+using ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
-namespace ClubeDaLeitura.ConsoleApp
+namespace ClubeDaLeitura.ConsoleApp;
+
+class Program
 {
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        TelaPrincipal telaPrincipal = new TelaPrincipal();
+
+        while (true)
         {
-            TelaPrincipal telaPrincipal = new TelaPrincipal();
+            telaPrincipal.ApresentarMenuPrincipal();
 
-            while (true)
+            TelaBase telaEscolhida = telaPrincipal.ObterTela();
+
+            if (telaEscolhida == null)
+                break;
+
+            char opcaoEscolhida = telaEscolhida.ApresentarMenu();
+
+            if (opcaoEscolhida == 'S')
+                break;
+
+            switch (opcaoEscolhida)
             {
-                telaPrincipal.ApresentarMenuPrincipal();
-
-                TelaBase telaEscolhida = telaPrincipal.ObterTela();
-
-                if (telaEscolhida == null)
+                case '1':
+                    telaEscolhida.CadastrarRegistro();
                     break;
 
-                char opcaoEscolhida = telaEscolhida.ApresentarMenu();
-
-                if (opcaoEscolhida == 'S')
+                case '2':
+                    telaEscolhida.VisualizarRegistros(true);
                     break;
 
-                switch (opcaoEscolhida)
-                {
-                    case '1':
-                        telaEscolhida.CadastrarRegistro();
-                        break;
+                case '3':
+                    telaEscolhida.EditarRegistro();
+                    break;
 
-                    case '2':
-                        telaEscolhida.VisualizarRegistros(true);
-                        break;
-
-                    case '3':
-                        telaEscolhida.EditarRegistro();
-                        break;
-
-                    case '4':
-                        telaEscolhida.ExcluirRegistro();
-                        break;
-                }
+                case '4':
+                    telaEscolhida.ExcluirRegistro();
+                    break;
             }
         }
     }
 }
+
