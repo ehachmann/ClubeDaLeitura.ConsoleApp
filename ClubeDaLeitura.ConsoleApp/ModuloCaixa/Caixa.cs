@@ -1,5 +1,4 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
-using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 

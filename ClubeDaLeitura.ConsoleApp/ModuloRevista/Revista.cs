@@ -1,5 +1,4 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
-using ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
