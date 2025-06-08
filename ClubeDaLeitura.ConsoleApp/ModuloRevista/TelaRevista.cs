@@ -5,14 +5,11 @@ namespace ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
 public class TelaRevista : TelaBase
 {
-    private RepositorioRevista repositorioRevista;
     private RepositorioCaixa repositorioCaixa;
 
-    public TelaRevista(RepositorioRevista repositorioRevista,
-           RepositorioCaixa repositorioCaixa
-    )   :  base("Revista", repositorioRevista)
+    public TelaRevista(RepositorioRevista repositorio, RepositorioCaixa repositorioCaixa)
+        : base("Revista", repositorio)
     {
-        this.repositorioRevista = repositorioRevista;
         this.repositorioCaixa = repositorioCaixa;
     }
 
@@ -26,11 +23,11 @@ public class TelaRevista : TelaBase
         Console.WriteLine();
 
         Console.WriteLine(
-            "{0, -5} | {1, -30} | {2, -20} | {3, -25} | {4, -20}",
-            "Id", "Título", "Número da Edição", "Ano de Publicação", "Caixa"
+            "{0, -10} | {1, -30} | {2, -20} | {3, -20} | {4, -20} | {5, -20}",
+            "Id", "Título", "Edição", "Ano de Publicação", "Caixa", "Status"
         );
 
-        EntidadeBase[] revistas = repositorioRevista.SelecionarRegistros();
+        EntidadeBase[] revistas = repositorio.SelecionarRegistros();
 
         for (int i = 0; i < revistas.Length; i++)
         {
@@ -40,12 +37,35 @@ public class TelaRevista : TelaBase
                 continue;
 
             Console.WriteLine(
-                "{0, -5} | {1, -30} | {2, -20} | {3, -25} | {4, -20}",
-                r.id, r.titulo, r.numeroEdicao, r.anoPublicacao, r.caixa
+             "{0, -10} | {1, -30} | {2, -20} | {3, -20} | {4, -20} | {5, -20}",
+                r.Id, r.Titulo, r.NumeroEdicao, r.AnoPublicacao, r.Caixa.Etiqueta, r.Status
             );
         }
 
         Console.ReadLine();
+    }
+
+    protected override EntidadeBase ObterDados()
+    {
+        Console.Write("Digite o título da revista: ");
+        string titulo = Console.ReadLine();
+
+        Console.Write("Digite o número da edição da revista: ");
+        int numeroEdicao = Convert.ToInt32(Console.ReadLine());
+
+        Console.Write("Digite o ano da publicação da revista: ");
+        int anoPublicacao = Convert.ToInt32(Console.ReadLine());
+
+        VisualizarCaixas();
+
+        Console.Write("\nDigite o ID da caixa selecionada: ");
+        int idCaixa = Convert.ToInt32(Console.ReadLine());
+
+        Caixa caixaSelecionada = (Caixa)repositorioCaixa.SelecionarRegistroPorId(idCaixa);
+
+        Revista revista = new Revista(titulo, numeroEdicao, anoPublicacao, caixaSelecionada);
+
+        return revista;
     }
 
     public void VisualizarCaixas()
@@ -57,7 +77,7 @@ public class TelaRevista : TelaBase
         Console.WriteLine();
 
         Console.WriteLine(
-            "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
+            "{0, -10} | {1, -30} | {2, -30} | {3, -30}",
             "Id", "Etiqueta", "Cor", "Dias de Empréstimo"
         );
 
@@ -65,47 +85,15 @@ public class TelaRevista : TelaBase
 
         for (int i = 0; i < caixas.Length; i++)
         {
-            Caixa C = (Caixa)caixas[i];
+            Caixa c = (Caixa)caixas[i];
 
-            if (C == null)
+            if (c == null)
                 continue;
 
             Console.WriteLine(
-               "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-                C.Id, C.etiqueta, C.cor, C.diasEmprestimo
+              "{0, -10} | {1, -30} | {2, -30} | {3, -30}",
+                c.Id, c.Etiqueta, c.Cor, c.DiasEmprestimo
             );
         }
-
-        Console.ReadLine();
-    }
-
-    protected override Revista ObterDados()
-    {
-        Console.Write("Digite o nome do título: ");
-        string titulo = Console.ReadLine();
-
-        Console.Write("Digite o número da edição: ");
-        int numeroEdicao = int.Parse(Console.ReadLine());
-
-        Console.Write("Digite o ano de publicação: ");
-        string anoPublicacao = Console.ReadLine();
-
-        Console.Write("Digite o nome da etiqueta da caixa: ");
-        string caixa = (Console.ReadLine());
-
-        /*VisualizarCaixas();
-
-        Console.Write("Digite o id da Caixa: ");
-        int idCaixa = int.Parse(Console.ReadLine());
-
-        Caixa caixaSelecionada = (Caixa)repositorioCaixa.SelecionarRegistroPorId(idCaixa);*/
-
-        Revista revista = new Revista();
-        revista.titulo = titulo;
-        revista.numeroEdicao = numeroEdicao;
-        revista.anoPublicacao = anoPublicacao;
-        revista.caixa = caixa;
-
-        return revista;
     }
 }

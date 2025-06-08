@@ -1,45 +1,51 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
+using System.Text.RegularExpressions;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 public class Caixa : EntidadeBase
 {
-    public string etiqueta;
-    public string cor;
-    public int diasEmprestimo;
+    public string Etiqueta { get; set; }
+    public string Cor { get; set; }
+    public int DiasEmprestimo { get; set; }
+
+    public Caixa(string etiqueta, string cor)
+    {
+        Etiqueta = etiqueta;
+        Cor = cor;
+        DiasEmprestimo = 7;
+    }
 
     public Caixa(string etiqueta, string cor, int diasEmprestimo)
     {
-        this.etiqueta = etiqueta;
-        this.cor = cor;
-        this.diasEmprestimo = diasEmprestimo;
-    }
-
-    public override string Validar()
-    {
-        string erros = "";
-
-        if (string.IsNullOrWhiteSpace(etiqueta))
-            erros += "O campo etiqueta é obrigatório!\n";
-
-        else if (etiqueta.Length < 4)
-            erros += "O nome deve conter mais que 3 caracteres!\n";
-
-        //if (responsavel.Length < 4)
-            //erros += "O nome do responsável deve conter mais que 3 caracteres!\n";
-
-        if (diasEmprestimo > 7)
-            erros += "O prazo máximo para empréstimo é 7 dias!\n";
-
-        return erros;
+        Etiqueta = etiqueta;
+        Cor = cor;
+        DiasEmprestimo = diasEmprestimo;
     }
 
     public override void AtualizarRegistro(EntidadeBase registroAtualizado)
     {
         Caixa caixaAtualizada = (Caixa)registroAtualizado;
 
-        this.etiqueta = caixaAtualizada.etiqueta;
-        this.cor = caixaAtualizada.cor;
-        this.diasEmprestimo = caixaAtualizada.diasEmprestimo;
+        this.Etiqueta = caixaAtualizada.Etiqueta;
+        this.Cor = caixaAtualizada.Cor;
+        this.DiasEmprestimo = caixaAtualizada.DiasEmprestimo;
+    }
+
+    public override string Validar()
+    {
+        string erros = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(Etiqueta) || Etiqueta.Length > 50)
+            erros += "O campo \"Etiqueta\" é obrigatório e recebe no máximo 50 caracteres.";
+
+        if (string.IsNullOrWhiteSpace(Cor))
+            erros += "O campo \"Cor\" é obrigatório.";
+
+        if (DiasEmprestimo < 1)
+            erros += "O campo \"Dias de Empréstimo\" deve conter um valor maior que 0.";
+
+        return erros;
     }
 }

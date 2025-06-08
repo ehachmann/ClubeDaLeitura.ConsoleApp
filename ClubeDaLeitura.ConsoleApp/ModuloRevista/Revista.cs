@@ -1,47 +1,51 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
 public class Revista : EntidadeBase
 {
-    public int id;
-    public string titulo;
-    public int numeroEdicao;
-    public string anoPublicacao;
-    public DateTime data = DateTime.MinValue;
-    public string caixa;
+    public string Titulo { get; set; }
+    public int NumeroEdicao { get; set; }
+    public int AnoPublicacao { get; set; }
+    public Caixa Caixa { get; set; }
+
+    public string Status { get; set; }
+
+    public Revista(string titulo, int numeroEdicao, int anoPublicacao, Caixa caixa)
+    {
+        Titulo = titulo;
+        NumeroEdicao = numeroEdicao;
+        AnoPublicacao = anoPublicacao;
+        Caixa = caixa;
+        Status = "Disponível";
+    }
 
     public override void AtualizarRegistro(EntidadeBase registroAtualizado)
     {
         Revista revistaAtualizada = (Revista)registroAtualizado;
 
-        this.titulo = revistaAtualizada.titulo;
-        this.numeroEdicao = revistaAtualizada.numeroEdicao;
-        this.anoPublicacao = revistaAtualizada.anoPublicacao;
-        this.caixa = revistaAtualizada.caixa;
+        Titulo = revistaAtualizada.Titulo;
+        NumeroEdicao = revistaAtualizada.NumeroEdicao;
+        AnoPublicacao = revistaAtualizada.AnoPublicacao;
+        Caixa = revistaAtualizada.Caixa;
     }
 
     public override string Validar()
     {
-        string erros = "";
+        string erros = string.Empty;
 
-        if (string.IsNullOrWhiteSpace(titulo))
-            erros += "O campo \"Título\" é obrigatório.\n";
+        if (Titulo.Length < 2 || Titulo.Length > 100)
+            erros += "O campo \"Título\" deve conter entre 2 e 100 caracteres.";
 
-        else if (titulo.Length < 3)
-            erros += "O campo \"Título\" precisa conter ao menos 2 caracteres.\n";
+        if (NumeroEdicao < 1)
+            erros += "O campo \"Número da Edição\" deve conter um valor maior que 0.";
 
-        if (numeroEdicao < 0)
-            erros += "O campo \"Número da Edição\" deve ser maior que zero.\n";
+        if (AnoPublicacao < DateTime.MinValue.Year || AnoPublicacao > DateTime.Now.Year)
+            erros += "O campo \"Ano de Publicação\" deve conter um valor válido no passado ou presente.";
 
-        if (DateTime.TryParse("1/1/" + anoPublicacao, out data))
-        {
-            /*int ano4Digitos = data.Year;
-            anoPublicacao = ano4Digitos;*/
-        }
-        else
-            erros += "Ano de publicação inválido.\n";
+        if (Caixa == null)
+            erros += "O campo \"Caixa\" é obrigatório.";
 
         return erros;
     }

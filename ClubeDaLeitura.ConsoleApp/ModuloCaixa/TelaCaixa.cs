@@ -1,17 +1,141 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 public class TelaCaixa : TelaBase
 {
-    private RepositorioCaixa repositorioCaixa;
-
-    public TelaCaixa(RepositorioCaixa repositorioCaixa)
-        : base("Caixa", repositorioCaixa)
+    public TelaCaixa(RepositorioCaixa repositorio) : base("Caixa", repositorio)
     {
-        this.repositorioCaixa = repositorioCaixa;
+    }
+    public override void CadastrarRegistro()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine($"Cadastro de {nomeEntidade}");
+
+        Console.WriteLine();
+
+        Caixa novoRegistro = (Caixa)ObterDados();
+
+        string erros = novoRegistro.Validar();
+
+        if (erros.Length > 0)
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(erros);
+            Console.ResetColor();
+
+            Console.Write("\nDigite ENTER para continuar...");
+            Console.ReadLine();
+
+            CadastrarRegistro();
+
+            return;
+        }
+
+        EntidadeBase[] registros = repositorio.SelecionarRegistros();
+
+        for (int i = 0; i < registros.Length; i++)
+        {
+            Caixa caixaRegistrado = (Caixa)registros[i];
+
+            if (caixaRegistrado == null)
+                continue;
+
+            if (caixaRegistrado.Etiqueta == novoRegistro.Etiqueta)
+            {
+                Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Esse nome de etiqueta já foi cadastrado!");
+                Console.ResetColor();
+
+                Console.Write("\nDigite ENTER para continuar...");
+                Console.ReadLine();
+
+                CadastrarRegistro();
+                return;
+            }
+        }
+
+        repositorio.CadastrarRegistro(novoRegistro);
+
+        Console.WriteLine($"\n{nomeEntidade} cadastrada com sucesso!");
+        Console.ReadLine();
     }
 
+    public override void EditarRegistro()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine($"Edição de {nomeEntidade}");
+
+        Console.WriteLine();
+
+        VisualizarRegistros(false);
+
+        Console.Write("Digite o id do registro que deseja selecionar: ");
+        int idSelecionado = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine();
+
+        Caixa registroAtualizado = (Caixa)ObterDados();
+
+        string erros = registroAtualizado.Validar();
+
+        if (erros.Length > 0)
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(erros);
+            Console.ResetColor();
+
+            Console.Write("\nDigite ENTER para continuar...");
+            Console.ReadLine();
+
+            EditarRegistro();
+
+            return;
+        }
+
+        EntidadeBase[] registros = repositorio.SelecionarRegistros();
+
+        for (int i = 0; i < registros.Length; i++)
+        {
+            Caixa caixaRegistrado = (Caixa)registros[i];
+
+            if (caixaRegistrado == null)
+                continue;
+
+            if (
+                caixaRegistrado.Id != idSelecionado &&
+                (caixaRegistrado.Etiqueta == registroAtualizado.Etiqueta)
+            )
+            {
+                Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Esse nome de etiqueta já foi cadastrado!");
+                Console.ResetColor();
+
+                Console.Write("\nDigite ENTER para continuar...");
+                Console.ReadLine();
+
+                EditarRegistro();
+
+                return;
+            }
+        }
+
+        repositorio.EditarRegistro(idSelecionado, registroAtualizado);
+
+        Console.WriteLine($"\n{nomeEntidade} editado com sucesso!");
+        Console.ReadLine();
+    }
     public override void VisualizarRegistros(bool exibirCabecalho)
     {
         if (exibirCabecalho == true)
@@ -22,40 +146,45 @@ public class TelaCaixa : TelaBase
         Console.WriteLine();
 
         Console.WriteLine(
-            "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
+            "{0, -10} | {1, -30} | {2, -30} | {3, -30}",
             "Id", "Etiqueta", "Cor", "Dias de Empréstimo"
         );
 
-        EntidadeBase[] caixas = repositorioCaixa.SelecionarRegistros();
+        EntidadeBase[] caixas = repositorio.SelecionarRegistros();
 
         for (int i = 0; i < caixas.Length; i++)
         {
-            Caixa C = (Caixa)caixas[i];
+            Caixa c = (Caixa)caixas[i];
 
-            if (C == null)
+            if (c == null)
                 continue;
 
             Console.WriteLine(
-               "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-                C.Id, C.etiqueta, C.cor, C.diasEmprestimo
+              "{0, -10} | {1, -30} | {2, -30} | {3, -30}",
+                c.Id, c.Etiqueta, c.Cor, c.DiasEmprestimo
             );
         }
 
         Console.ReadLine();
     }
 
-    protected override Caixa ObterDados()
+    protected override EntidadeBase ObterDados()
     {
-        Console.Write("Digite o nome da Etiqueta: ");
-        string nome = Console.ReadLine();
+        Console.Write("Digite a etiqueta da caixa: ");
+        string etiqueta = Console.ReadLine();
 
-        Console.Write("Digite a cor da Caixa: ");
+        Console.Write("Digite a cor da caixa: ");
         string cor = Console.ReadLine();
 
-        Console.Write("Digite quantidade de dias de empréstimo: ");
-        int dias = int.Parse(Console.ReadLine());
+        Console.Write("Dias de Empréstimo (opcional): ");
+        bool conseguiuConverter = int.TryParse(Console.ReadLine(), out int diasEmprestimo);
 
-        Caixa caixa = new Caixa(nome, cor, dias);
+        Caixa caixa;
+
+        if (conseguiuConverter)
+            caixa = new Caixa(etiqueta, cor, diasEmprestimo);
+        else
+            caixa = new Caixa(etiqueta, cor);
 
         return caixa;
     }
