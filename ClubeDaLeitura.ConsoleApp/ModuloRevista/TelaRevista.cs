@@ -1,4 +1,5 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using ClubeDaLeitura.ConsoleApp.ModuloAmigo;
 using ClubeDaLeitura.ConsoleApp.ModuloCaixa;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloRevista;
@@ -11,6 +12,136 @@ public class TelaRevista : TelaBase
         : base("Revista", repositorio)
     {
         this.repositorioCaixa = repositorioCaixa;
+    }
+
+    public override void CadastrarRegistro()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine($"Cadastro de {nomeEntidade}");
+
+        Console.WriteLine();
+
+        Revista novoRegistro = (Revista)ObterDados();
+
+        string erros = novoRegistro.Validar();
+
+        if (erros.Length > 0)
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(erros);
+            Console.ResetColor();
+
+            Console.Write("\nDigite ENTER para continuar...");
+            Console.ReadLine();
+
+            CadastrarRegistro();
+
+            return;
+        }
+
+        EntidadeBase[] registros = repositorio.SelecionarRegistros();
+
+        for (int i = 0; i < registros.Length; i++)
+        {
+            Revista revistaRegistrada = (Revista)registros[i];
+
+            if (revistaRegistrada == null)
+                continue;
+
+            if (revistaRegistrada.Titulo == novoRegistro.Titulo || revistaRegistrada.NumeroEdicao == novoRegistro.NumeroEdicao)
+            {
+                Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Uma revista com este título ou número de edição já foi cadastrada!");
+                Console.ResetColor();
+
+                Console.Write("\nDigite ENTER para continuar...");
+                Console.ReadLine();
+
+                CadastrarRegistro();
+                return;
+            }
+        }
+
+        repositorio.CadastrarRegistro(novoRegistro);
+
+        Console.WriteLine($"\n{nomeEntidade} cadastrada com sucesso!");
+        Console.ReadLine();
+    }
+
+    public override void EditarRegistro()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine($"Edição de {nomeEntidade}");
+
+        Console.WriteLine();
+
+        VisualizarRegistros(false);
+
+        Console.Write("Digite o id do registro que deseja selecionar: ");
+        int idSelecionado = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine();
+
+        Revista registroAtualizado = (Revista)ObterDados();
+
+        string erros = registroAtualizado.Validar();
+
+        if (erros.Length > 0)
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(erros);
+            Console.ResetColor();
+
+            Console.Write("\nDigite ENTER para continuar...");
+            Console.ReadLine();
+
+            EditarRegistro();
+
+            return;
+        }
+
+        EntidadeBase[] registros = repositorio.SelecionarRegistros();
+
+        for (int i = 0; i < registros.Length; i++)
+        {
+            Revista revistaRegistrada = (Revista)registros[i];
+
+            if (revistaRegistrada == null)
+                continue;
+
+            if (
+                revistaRegistrada.Id != idSelecionado &&
+                (revistaRegistrada.Titulo == registroAtualizado.Titulo ||
+                revistaRegistrada.NumeroEdicao == registroAtualizado.NumeroEdicao)
+            )
+            {
+                Console.WriteLine();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Uma revista com este título ou número de edição já foi cadastrada!");
+                Console.ResetColor();
+
+                Console.Write("\nDigite ENTER para continuar...");
+                Console.ReadLine();
+
+                EditarRegistro();
+
+                return;
+            }
+        }
+
+        repositorio.EditarRegistro(idSelecionado, registroAtualizado);
+
+        Console.WriteLine($"\n{nomeEntidade} editado com sucesso!");
+        Console.ReadLine();
     }
 
     public override void VisualizarRegistros(bool exibirCabecalho)
