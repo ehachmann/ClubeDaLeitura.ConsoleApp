@@ -1,49 +1,43 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using System.Text.RegularExpressions;
 
-namespace ClubeDaLeitura.ConsoleApp.ModuloAmigo
+namespace ClubeDaLeitura.ConsoleApp.ModuloAmigo;
+
+public class Amigo : EntidadeBase
 {
-    public class Amigo : EntidadeBase
+    public string Nome { get; set; }
+    public string NomeResponsavel { get; set; }
+    public string Telefone { get; set; }
+
+    public Amigo(string nome, string nomeResponsavel, string telefone)
     {
-        public string nome;
-        public string responsavel;
-        public string telefone;
+        Nome = nome;
+        NomeResponsavel = nomeResponsavel;
+        Telefone = telefone;
+    }
 
-        public Amigo(string nome, string responsavel, string telefone)
-        {
-            this.nome = nome;
-            this.responsavel = responsavel;
-            this.telefone = telefone;
-        }
+    public override void AtualizarRegistro(EntidadeBase registroAtualizado)
+    {
+        Amigo amigoAtualizado = (Amigo)registroAtualizado;
 
-        public override string Validar()
-        {
-            string erros = "";
+        this.Nome = amigoAtualizado.Nome;
+        this.NomeResponsavel = amigoAtualizado.NomeResponsavel;
+        this.Telefone = amigoAtualizado.Telefone;
+    }
 
-            if (string.IsNullOrWhiteSpace(nome))
-                erros += "O nome é obrigatório!\n";
+    public override string Validar()
+    {
+        string erros = string.Empty;
 
-            else if (nome.Length < 4)
-                erros += "O nome deve conter mais que 3 caracteres!\n";
+        if (Nome.Length < 3 || Nome.Length > 100)
+            erros += "O campo \"Nome\" deve conter entre 3 e 100 caracteres.";
 
-            if (responsavel.Length < 4)
-                erros += "O nome do responsável deve conter mais que 3 caracteres!\n";
+        if (NomeResponsavel.Length < 3 || NomeResponsavel.Length > 100)
+            erros += "O campo \"Nome do Responsável\" deve conter entre 3 e 100 caracteres.";
 
-            if (string.IsNullOrWhiteSpace(telefone))
-                erros += "O telefone é obrigatório!\n";
+        if (!Regex.IsMatch(Telefone, @"^\(?\d{2}\)?\s?(9\d{4}|\d{4})-?\d{4}$"))
+            erros += "O campo \"Telefone\" deve seguir o padrão (DDD) 90000-0000.";
 
-            else if (telefone.Length < 9)
-                erros += "O telefone deve conter no mínimo 9 caracteres!\n";
-
-            return erros;
-        }
-
-        public override void AtualizarRegistro(EntidadeBase registroAtualizado)
-        {
-            Amigo amigoAtualizado = (Amigo)registroAtualizado;
-
-            this.nome = amigoAtualizado.nome;
-            this.responsavel = amigoAtualizado.responsavel;
-            this.telefone = amigoAtualizado.telefone;
-        }
+        return erros;
     }
 }

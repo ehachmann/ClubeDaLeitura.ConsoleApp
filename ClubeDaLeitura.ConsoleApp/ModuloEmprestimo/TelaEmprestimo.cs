@@ -37,7 +37,7 @@ public class TelaEmprestimo : TelaBase
 
             Console.WriteLine(
                "{0, -10} | {1, -20} | {2, -30} | {3, -20} | {4, -15}",
-                E.id, E.amigo, E.revista, E.dataEmprestimo.ToShortDateString(), E.dataDevolucao.ToShortDateString()
+                E.Id, E.amigo, E.revista, E.dataEmprestimo.ToShortDateString(), E.dataDevolucao.ToShortDateString()
             );
         }
 

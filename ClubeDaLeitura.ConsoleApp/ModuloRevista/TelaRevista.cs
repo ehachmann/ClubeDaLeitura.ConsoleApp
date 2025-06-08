@@ -26,7 +26,7 @@ public class TelaRevista : TelaBase
         Console.WriteLine();
 
         Console.WriteLine(
-            "{0, -10} | {1, -30} | {2, -15} | {3, -15} | {4, -20}",
+            "{0, -5} | {1, -30} | {2, -20} | {3, -25} | {4, -20}",
             "Id", "Título", "Número da Edição", "Ano de Publicação", "Caixa"
         );
 
@@ -40,8 +40,8 @@ public class TelaRevista : TelaBase
                 continue;
 
             Console.WriteLine(
-                "{0, -10} | {1, -30} | {2, -15} | {3, -15} | {4, -20}",
-                r.id, r.titulo, r.numeroEdicao, r.anoPublicacao.ToShortDateString(), r.caixa
+                "{0, -5} | {1, -30} | {2, -20} | {3, -25} | {4, -20}",
+                r.id, r.titulo, r.numeroEdicao, r.anoPublicacao, r.caixa
             );
         }
 
@@ -72,7 +72,7 @@ public class TelaRevista : TelaBase
 
             Console.WriteLine(
                "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-                C.id, C.etiqueta, C.cor, C.diasEmprestimo
+                C.Id, C.etiqueta, C.cor, C.diasEmprestimo
             );
         }
 
@@ -88,17 +88,17 @@ public class TelaRevista : TelaBase
         int numeroEdicao = int.Parse(Console.ReadLine());
 
         Console.Write("Digite o ano de publicação: ");
-        DateTime anoPublicacao = DateTime.Parse(Console.ReadLine());
+        string anoPublicacao = Console.ReadLine();
 
         Console.Write("Digite o nome da etiqueta da caixa: ");
         string caixa = (Console.ReadLine());
 
-        VisualizarCaixas();
+        /*VisualizarCaixas();
 
         Console.Write("Digite o id da Caixa: ");
         int idCaixa = int.Parse(Console.ReadLine());
 
-        Caixa caixaSelecionada = (Caixa)repositorioCaixa.SelecionarRegistroPorId(idCaixa);
+        Caixa caixaSelecionada = (Caixa)repositorioCaixa.SelecionarRegistroPorId(idCaixa);*/
 
         Revista revista = new Revista();
         revista.titulo = titulo;

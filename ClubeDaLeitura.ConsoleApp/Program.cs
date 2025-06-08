@@ -22,7 +22,7 @@ class Program
 
             char opcaoEscolhida = telaEscolhida.ApresentarMenu();
 
-            if (opcaoEscolhida == 'S')
+            if (opcaoEscolhida == 'S' || opcaoEscolhida == 's')
                 break;
 
             switch (opcaoEscolhida)

@@ -1,68 +1,66 @@
 ﻿
-namespace ClubeDaLeitura.ConsoleApp.Compartilhado
+namespace ClubeDaLeitura.ConsoleApp.Compartilhado;
+
+public abstract class RepositorioBase
 {
-    public abstract class RepositorioBase
+    protected EntidadeBase[] registros = new EntidadeBase[100];
+    protected int contadorRegistros = 0;
+
+    public void CadastrarRegistro(EntidadeBase novoRegistro)
     {
-        private EntidadeBase[] registros = new EntidadeBase[100];
-        private int contadorRegistros = 0;
+        registros[contadorRegistros] = novoRegistro;
 
-        public void CadastrarRegistro(EntidadeBase novoRegistro)
-        {
-            registros[contadorRegistros] = novoRegistro;
+        contadorRegistros++;
+    }
 
-            contadorRegistros++;
-        }
+    public bool EditarRegistro(int idSelecionado, EntidadeBase registroAtualizado)
+    {
+        EntidadeBase registroSelecionado = SelecionarRegistroPorId(idSelecionado);
 
-        public bool EditarRegistro(int idSelecionado, EntidadeBase registroAtualizado)
-        {
-            EntidadeBase registroSelecionado = SelecionarRegistroPorId(idSelecionado);
-
-            if (registroSelecionado == null)
-                return false;
-
-            registroSelecionado.AtualizarRegistro(registroAtualizado);
-
-            return true;
-        }
-
-        public bool ExcluirRegistro(int idSelecionado)
-        {
-            for (int i = 0; i < registros.Length; i++)
-            {
-                if (registros[i] == null)
-                    continue;
-
-                else if (registros[i].id == idSelecionado)
-                {
-                    registros[i] = null;
-
-                    return true;
-                }
-            }
-
+        if (registroSelecionado == null)
             return false;
-        }
 
-        public EntidadeBase[] SelecionarRegistros()
-        {
-            return registros;
-        }
+        registroSelecionado.AtualizarRegistro(registroAtualizado);
 
-        public EntidadeBase SelecionarRegistroPorId(int idSelecionado)
+        return true;
+    }
+
+    public bool ExcluirRegistro(int idSelecionado)
+    {
+        for (int i = 0; i < registros.Length; i++)
         {
-            for (int i = 0; i < registros.Length; i++)
+            if (registros[i] == null)
+                continue;
+
+            else if (registros[i].Id == idSelecionado)
             {
-                EntidadeBase registro = registros[i];
+                registros[i] = null;
 
-                if (registro == null)
-                    continue;
-
-                if (registro.id == idSelecionado)
-                    return registro;
+                return true;
             }
-
-            return null;
         }
 
+        return false;
+    }
+
+    public EntidadeBase[] SelecionarRegistros()
+    {
+        return registros;
+    }
+
+    public EntidadeBase SelecionarRegistroPorId(int idSelecionado)
+    {
+        for (int i = 0; i < registros.Length; i++)
+        {
+            EntidadeBase registro = registros[i];
+
+            if (registro == null)
+                continue;
+
+            if (registro.Id == idSelecionado)
+                return registro;
+        }
+
+        return null;
     }
 }

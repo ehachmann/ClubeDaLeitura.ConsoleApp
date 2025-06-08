@@ -1,4 +1,5 @@
 ﻿using ClubeDaLeitura.ConsoleApp.Compartilhado;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ClubeDaLeitura.ConsoleApp.ModuloRevista;
 
@@ -7,7 +8,8 @@ public class Revista : EntidadeBase
     public int id;
     public string titulo;
     public int numeroEdicao;
-    public DateTime anoPublicacao;
+    public string anoPublicacao;
+    public DateTime data = DateTime.MinValue;
     public string caixa;
 
     public override void AtualizarRegistro(EntidadeBase registroAtualizado)
@@ -30,11 +32,16 @@ public class Revista : EntidadeBase
         else if (titulo.Length < 3)
             erros += "O campo \"Título\" precisa conter ao menos 2 caracteres.\n";
 
-        if (numeroEdicao > 0)
+        if (numeroEdicao < 0)
             erros += "O campo \"Número da Edição\" deve ser maior que zero.\n";
 
-        /*if (anoPublicacao > DateTime.Now)
-            erros += "O campo \"\" deve conter uma data passada.\n";*/
+        if (DateTime.TryParse("1/1/" + anoPublicacao, out data))
+        {
+            /*int ano4Digitos = data.Year;
+            anoPublicacao = ano4Digitos;*/
+        }
+        else
+            erros += "Ano de publicação inválido.\n";
 
         return erros;
     }

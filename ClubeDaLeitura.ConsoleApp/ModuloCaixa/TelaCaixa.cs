@@ -37,7 +37,7 @@ public class TelaCaixa : TelaBase
 
             Console.WriteLine(
                "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-                C.id, C.etiqueta, C.cor, C.diasEmprestimo
+                C.Id, C.etiqueta, C.cor, C.diasEmprestimo
             );
         }
 
