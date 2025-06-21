@@ -28,6 +28,7 @@ public class TelaEmprestimo : TelaBase
         Console.WriteLine($"1 - Cadastro de {nomeEntidade}");
         Console.WriteLine($"2 - Devolução de {nomeEntidade}");
         Console.WriteLine($"3 - Visualizar {nomeEntidade}s");
+        Console.WriteLine($"4 - Pagar Multas de {nomeEntidade}s");
         Console.WriteLine($"S - Sair");
 
         Console.WriteLine();
@@ -133,17 +134,64 @@ public class TelaEmprestimo : TelaBase
 
         string resposta = Console.ReadLine()!;
 
-        if (resposta.ToUpper() == "S")
-        {
-            emprestimoSelecionado.Status = "Concluído";
-            emprestimoSelecionado.Revista.Status = "Disponível";
+        if (resposta.ToUpper() != "S")
+            return;
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\n{nomeEntidade} concluído com sucesso!");
+        emprestimoSelecionado.Status = "Concluído";
+        emprestimoSelecionado.Revista.Status = "Disponível";
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"\n{nomeEntidade} concluído com sucesso!");
+        Console.ResetColor();
+
+        Console.ReadLine();
+    }
+
+    public void PagarMultas()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine($"Pagamento de Multas de {nomeEntidade}");
+
+        Console.WriteLine();
+
+        VisualizarEmprestimosComMulta();
+
+        Console.Write("Digite o ID do emprestimo com multas pendentes: ");
+        int idEmprestimo = Convert.ToInt32(Console.ReadLine());
+
+        Emprestimo emprestimoSelecionado = (Emprestimo)repositorio.SelecionarRegistroPorId(idEmprestimo);
+
+        if (emprestimoSelecionado == null)
+        {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("O empréstimo selecionado não existe!");
             Console.ResetColor();
 
+            Console.Write("\nDigite ENTER para continuar...");
             Console.ReadLine();
+
+            return;
         }
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.Write("\nDeseja confirmar o pagamento da multa? Esta ação é irreversível. (s/N): ");
+        Console.ResetColor();
+
+        string resposta = Console.ReadLine()!;
+
+        if (resposta.ToUpper() != "S")
+            return;
+
+        emprestimoSelecionado.MultaPaga = true;
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"\nPagamento de Multa de {nomeEntidade} concluído com sucesso!");
+        Console.ResetColor();
+
+        Console.ReadLine();
     }
 
     public override void VisualizarRegistros(bool exibirCabecalho)
@@ -179,6 +227,10 @@ public class TelaEmprestimo : TelaBase
 
             Console.ResetColor();
         }
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.Write($"\nDigite ENTER para continuar...");
+        Console.ResetColor();
 
         Console.ReadLine();
     }
@@ -238,6 +290,40 @@ public class TelaEmprestimo : TelaBase
             Console.WriteLine(
              "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -25} | {5, -15}",
                 e.Id, e.Amigo.Nome, e.Revista.Titulo, e.DataEmprestimo.ToShortDateString(), e.DataDevolucao.ToShortDateString(), e.Status
+            );
+
+            Console.ResetColor();
+        }
+
+        Console.WriteLine();
+    }
+
+    private void VisualizarEmprestimosComMulta()
+    {
+        Console.WriteLine("Visualização de Empréstimos Ativos");
+
+        Console.WriteLine();
+
+        Console.WriteLine(
+            "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -25} | {5, -20}",
+            "Id", "Amigo", "Revista", "Data do Empréstimo", "Data Prev. Devolução", "Valor da multa"
+        );
+
+        EntidadeBase[] emprestimosComMulta = repositorioEmprestimo.SelecionarEmprestimosComMulta();
+
+        for (int i = 0; i < emprestimosComMulta.Length; i++)
+        {
+            Emprestimo e = (Emprestimo)emprestimosComMulta[i];
+
+            if (e == null)
+                continue;
+
+            if (e.Status == "Atrasado")
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+
+            Console.WriteLine(
+             "{0, -5} | {1, -15} | {2, -15} | {3, -20} | {4, -25} | {5, -15}",
+                e.Id, e.Amigo.Nome, e.Revista.Titulo, e.DataEmprestimo.ToShortDateString(), e.DataDevolucao.ToShortDateString(), e.Multa.Valor.ToString("C2")
             );
 
             Console.ResetColor();

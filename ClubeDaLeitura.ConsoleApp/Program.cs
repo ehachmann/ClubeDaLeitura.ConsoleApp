@@ -40,6 +40,9 @@ class Program
                     case '3':
                         telaEmprestimo.VisualizarRegistros(true);
                         break;
+                    case '4':
+                        telaEmprestimo.PagarMultas();
+                        break;
                 }
             }
             else
