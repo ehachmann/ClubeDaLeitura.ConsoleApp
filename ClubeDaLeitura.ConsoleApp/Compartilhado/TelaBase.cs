@@ -60,7 +60,10 @@ public abstract class TelaBase
 
         repositorio.CadastrarRegistro(novoRegistro);
 
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\n{nomeEntidade} cadastrado com sucesso!");
+        Console.ResetColor();
+
         Console.ReadLine();
     }
 
@@ -83,7 +86,10 @@ public abstract class TelaBase
 
         repositorio.EditarRegistro(idSelecionado, registroAtualizado);
 
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\n{nomeEntidade} editado com sucesso!");
+        Console.ResetColor();
+
         Console.ReadLine();
     }
 
@@ -104,7 +110,10 @@ public abstract class TelaBase
 
         repositorio.ExcluirRegistro(idSelecionado);
 
+        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine($"\n{nomeEntidade} excluído com sucesso!");
+        Console.ResetColor();
+
         Console.ReadLine();
     }
 
